@@ -10,7 +10,8 @@ theme:
   highlight_color: '#3498db'
 
   # Profile links on the left sidebar, leave blank to ignore
-  social:miketung
+  social:
+    github: miketung
     #bitbucket: philipj
     hacker_news: miket
     #stackexchange: 348619
