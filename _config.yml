@@ -1,6 +1,6 @@
 # General Jekyll Config
 pygments: true
-url: http://example.com
+url: http://miketung.github.io
 lsi: false
 exclude: [LICENSE, CNAME, README.md, .gitignore]
 
@@ -10,22 +10,21 @@ theme:
   highlight_color: '#3498db'
 
   # Profile links on the left sidebar, leave blank to ignore
-  social:
-    github: swanson
+  social:miketung
     #bitbucket: philipj
-    hacker_news: swanson
+    hacker_news: miket
     #stackexchange: 348619
     #stackoverflow: 348619
-    twitter: _swanson
+    twitter: mikektung
     #facebook: zuck
     #tumblr: animalygifs
-    #linkedin: philipjagielski
+    linkedin: 11055752
     #gplus: 110552447039675960964
 
   # "Hi, I'm _______"
-  name: Matt Swanson
-  email: test@example.com
-  tagline: "weak opinions, strongly held"
+  name: Mike Tung
+  email: mike@cs.stanford.edu
+  tagline: "To achieve great things two things are needed; a plan, and not quite enough time."
 
   # Google Analytics key, leave blank to ignore
   google_analytics_key: UA-xxxx-x
