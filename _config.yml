@@ -1,6 +1,6 @@
 # General Jekyll Config
 url: http://miketung.github.io
-highlighter: rogue
+highlighter: rouge
 lsi: false
 exclude: [LICENSE, CNAME, README.md, .gitignore]
 
