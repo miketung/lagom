@@ -1,5 +1,4 @@
 # General Jekyll Config
-pygments: true
 url: http://miketung.github.io
 lsi: false
 exclude: [LICENSE, CNAME, README.md, .gitignore]
