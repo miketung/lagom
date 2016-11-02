@@ -107,14 +107,10 @@ var doCluster = function(){
   for(var i=0;i<N;i++){
     distM.push([]);
     for(var j=0;j<N;j++){
-      var x = points[i]==points[j] ? 0 : 1; 
-      if (1-p > Math.random())
-        distM[i][j] = x;
-      else
-        distM[i][j] = Math.random();
-      //distM[i][j] = (1-p) * x + p * Math.random();
+      distM[i][j] = points[i]==points[j] ? 0 : 1; 
     }
   }
+  distM = noise(distM, p);
 
   // graph distance matrix
   var canvas = document.getElementById("Graph1");
@@ -171,7 +167,7 @@ var doCluster = function(){
   do {
     //console.log(JSON.stringify(clusters));
     changed = false;
-    var minDist = 1;
+    var minDist = 0.5;
     var pair = null;
     for(var i=0;i<clusters.length;i++){
       for(var j=i+1;j<clusters.length;j++){
@@ -190,7 +186,7 @@ var doCluster = function(){
         }
       }
     }
-    if(minDist < 0.5){
+    if(pair!=null){
       var i = pair[0], j = pair[1]; 
       clusters[i] = clusters[i].concat(clusters[j])
       clusters.splice(j, 1);
@@ -265,6 +261,29 @@ var doCluster = function(){
   drawClusters(points, clusters, "Graph4");
 }
 
+// adds noise to a 2D matrix
+var noise = function(D, p){ 
+  for(var i=0;i<N;i++){
+    for(var j=0;j<N;j++){
+      var x = D[i][j];
+      D[i][j] = nextGaussian(x, p); 
+    }
+  }
+  return D;
+}
+
+var nextGaussian = function(mean,v){
+  // polar method of Java Random.nextGaussian()
+  var v1=0, v2=0,s=0;
+  do {
+    v1 = 2 * Math.random() - 1;
+    v2 = 2 * Math.random() - 1;
+    s = v1 * v1 + v2 * v2;
+  }while(s >= 1 || s==0);
+  var multiplier = Math.sqrt(-2 * Math.log(s) / s);
+  return v1 * multiplier * v + mean;
+}
+
 var initClusters = function(points){ // each point is a cluster
   var clusters = [];
   for(var i=0;i<points.length;i++){
@@ -278,31 +297,61 @@ var clearCanvas = function(element){
 }
 
 var drawClusters = function(points, clusters, id, showtext){
-  var fl = clusters.reduce(function(a, b) {
-  return a.concat(b);
-  }, []); 
   var canvas = document.getElementById(id);
-  // stash flattened in the dom
-  var flattened = [];
-  for(var i=0;i<fl.length; i++){
-    flattened[i] = points[fl[i]];
+  // stash clusters in the dom
+  var cl = [];
+  for(var i in clusters){
+    var c = []
+    for(var j in clusters[i]){
+      c.push(points[clusters[i][j]]);
+    }
+    cl.push(c);
   }
-  canvas.setAttribute('data', JSON.stringify(flattened));
-  drawClusters2(flattened, canvas, showtext);
+  canvas.setAttribute('data', JSON.stringify(cl));
+  drawClusters2(cl, canvas, showtext);
 }
-var drawClusters2 = function(flattened, canvas, showtext){
+var drawClusters2 = function(clusters, canvas, showtext){
   clearCanvas(canvas);
   var ctx = canvas.getContext("2d");
   ctx.font = "bold 16px 'Open Sans', Arial, sans-serif";
+
+  var clusterColorFlat = clusters.reduce(function(a, b) {
+  return a.concat(b);
+  }, []); 
+  var clusterIndexFlat = [];
+  var idx =0 ;
+  for(var i in clusters){
+    for(var j in clusters[i]){
+      clusterIndexFlat[idx++] = i;
+    }
+  }
+
   var idx=0;
   for(var i=0;i<10;i++){
     for(var j=0;j<10;j++){
-      ctx.fillStyle = colours[flattened[idx]];
-      ctx.fillRect(j*30, i*30, j*30 + 30, i*30+30);
+      ctx.fillStyle = colours[clusterColorFlat[idx]];
+      ctx.fillRect(j*30, i*30, 30, 30);
+      ctx.fillStyle = 'white';
       if(showtext){
-        ctx.fillStyle = 'white';
-        ctx.fillText(flattened[idx], j*30+8, i*30+20);
+        ctx.fillText(clusterColorFlat[idx], j*30+8, i*30+20);
       }
+      // draw partitions
+      var begOfRow = idx % 10 == 0;
+      var endOfRow = idx % 10 == 9;
+      var topRow = idx < 10;
+      var bottomRow = idx >= 90;
+      var prevDiff = idx==0 || clusterIndexFlat[idx] != clusterIndexFlat[idx-1];
+      var nextDiff = idx==clusterIndexFlat.length-1 || clusterIndexFlat[idx] != clusterIndexFlat[idx+1];
+      var topDiff = topRow || clusterIndexFlat[idx] != clusterIndexFlat[idx-10];
+      var bottomDiff = bottomRow  || clusterIndexFlat[idx] != clusterIndexFlat[idx+10];
+      if (topRow || topDiff)
+        ctx.fillRect(j*30, i*30, 30, 1); //top
+      if (bottomRow || bottomDiff) 
+        ctx.fillRect(j*30, i*30+29, 30, 1); //bottom
+      if(prevDiff && !begOfRow)
+        ctx.fillRect(j*30, i*30, 1, 30); //left
+      if(nextDiff && !endOfRow)
+        ctx.fillRect(j*30 + 29, i*30, 1, 30); //right
       idx++;
     }
   }
