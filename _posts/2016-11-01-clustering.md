@@ -56,7 +56,7 @@ categories:
   </div>
 <script type="text/javascript" src="{{ "/assets/js/jquery-1.4.2.min.js" | relative_url }}"></script>
 <script type="text/javascript" src="{{ "/assets/js/jquery-ui-1.8.custom.min.js" | relative_url }}"></script>
-<script type="text/javascript" src="{{ "/assets/js/randomcolor.js" | relative_url }}"></script>
+<script type="text/javascript" src="{{ "/assets/js/randomColor.js" | relative_url }}"></script>
 <script type="text/javascript" >
 
 var MAX_K = 20;
