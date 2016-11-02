@@ -61,6 +61,7 @@ categories:
   </div>
 <script type="text/javascript" src="{{ "/assets/js/jquery-1.4.2.min.js" | relative_url }}"></script>
 <script type="text/javascript" src="{{ "/assets/js/jquery-ui-1.8.custom.min.js" | relative_url }}"></script>
+<script type="text/javascript" src="{{ "/assets/js/jquery.ui.touch-punch.min.js" | relative_url }}"></script>
 <script type="text/javascript" src="{{ "/assets/js/randomColor.js" | relative_url }}"></script>
 <script type="text/javascript" >
 
@@ -250,8 +251,6 @@ var doCluster = function(){
       clusters.splice(j, 1);
     } else break;
   }while(true);
-  console.log(points);
-  console.log(JSON.stringify(clusters));
   drawClusters(points, clusters, "Graph4");
 }
 
