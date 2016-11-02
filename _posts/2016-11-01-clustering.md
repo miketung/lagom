@@ -79,6 +79,8 @@ jQuery(document).ready(function($){
 	/* Set some random initial values for the sliders */
   $('#Slider1').slider('value', 25);
   $('#Slider2').slider('value', 0);
+  
+  $('#Graph1,#Graph2,#Graph21,#Graph3,#Graph4').mouseover(function(){ drawClusters2(JSON.parse($(this).attr('data')), this, true);}).mouseout(function(){ drawClusters2(JSON.parse($(this).attr('data')), this, false);});
 
 	doCluster();
 });
@@ -276,21 +278,30 @@ var clearCanvas = function(element){
 }
 
 var drawClusters = function(points, clusters, id, showtext){
-  var flattened = clusters.reduce(function(a, b) {
+  var fl = clusters.reduce(function(a, b) {
   return a.concat(b);
   }, []); 
   var canvas = document.getElementById(id);
+  // stash flattened in the dom
+  var flattened = [];
+  for(var i=0;i<fl.length; i++){
+    flattened[i] = points[fl[i]];
+  }
+  canvas.setAttribute('data', JSON.stringify(flattened));
+  drawClusters2(flattened, canvas, showtext);
+}
+var drawClusters2 = function(flattened, canvas, showtext){
   clearCanvas(canvas);
   var ctx = canvas.getContext("2d");
-  ctx.font = "14px sans-serif";
+  ctx.font = "bold 16px 'Open Sans', Arial, sans-serif";
   var idx=0;
   for(var i=0;i<10;i++){
     for(var j=0;j<10;j++){
-      ctx.fillStyle = colours[points[flattened[idx]]];
+      ctx.fillStyle = colours[flattened[idx]];
       ctx.fillRect(j*30, i*30, j*30 + 30, i*30+30);
       if(showtext){
-        ctx.fillStyle = '#dedede';
-        ctx.fillText(points[flattened[idx]], j*30+10, i*30+20);
+        ctx.fillStyle = 'white';
+        ctx.fillText(flattened[idx], j*30+8, i*30+20);
       }
       idx++;
     }
