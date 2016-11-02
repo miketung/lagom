@@ -83,6 +83,9 @@ jQuery(document).ready(function($){
 	doCluster();
 });
 
+var lastK = null;
+var lastPoints = null;
+
 var doCluster = function(){
   var k = Math.floor($('#Slider1').slider('value')*MAX_K/100)+1; // range 1-MAX_K
   var p = (Math.round($('#Slider2').slider('value')*20/100)) / 20; // range 0-1
@@ -91,7 +94,13 @@ var doCluster = function(){
 
   // generate a random cluster assignment for 100 points
   var points = [];
-  for(var i=0;i<N;i++) points[i] = Math.floor(Math.random() * k);
+  if(k==lastK && lastPoints)
+    points = lastPoints;
+  else {
+    for(var i=0;i<N;i++) points[i] = Math.floor(Math.random() * k);
+    lastPoints=points;
+    lastK=k;
+  }
   var distM = [];
   for(var i=0;i<N;i++){
     distM.push([]);
