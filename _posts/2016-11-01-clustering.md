@@ -44,6 +44,11 @@ categories:
     <div>Greedy linkage</div>
     </div>
     <div>
+    <canvas id="Graph21" width="300" height="300" ></canvas>
+    <br />
+    <div>Single linkage</div>
+    </div>
+    <div>
     <canvas id="Graph3" width="300" height="300" ></canvas>
     <br />
     <div>Complete linkage</div>
@@ -148,6 +153,39 @@ var doCluster = function(){
   }while(changed);
   drawClusters(points, clusters, "Graph2");
 
+  // single-linkage
+  var clusters = initClusters(points);
+  var changed = false;
+  do {
+    //console.log(JSON.stringify(clusters));
+    changed = false;
+    var minDist = 1;
+    var pair = null;
+    for(var i=0;i<clusters.length;i++){
+      for(var j=i+1;j<clusters.length;j++){
+        var c1 = clusters[i], c2 = clusters[j];
+        compareCluster:
+        var min = 1;
+        for(var u=0;u<c1.length;u++){
+          for(var v=0;v<c2.length;v++){
+            if(distM[c1[u]][c2[v]] < min)
+              min = distM[c1[u]][c2[v]];
+          }
+        }
+        if (min < minDist){
+          minDist = min;
+          pair = [i,j];
+        }
+      }
+    }
+    if(minDist < 0.5){
+      var i = pair[0], j = pair[1]; 
+      clusters[i] = clusters[i].concat(clusters[j])
+      clusters.splice(j, 1);
+    } else break;
+  }while(true);
+  drawClusters(points, clusters, "Graph21");
+
   // complete-linkage
   var clusters = initClusters(points);
   var changed = false;
@@ -229,18 +267,23 @@ var clearCanvas = function(element){
   $(element).attr('width',$(element).attr('width'));
 }
 
-var drawClusters = function(points, clusters, id){
+var drawClusters = function(points, clusters, id, showtext){
   var flattened = clusters.reduce(function(a, b) {
   return a.concat(b);
   }, []); 
   var canvas = document.getElementById(id);
   clearCanvas(canvas);
   var ctx = canvas.getContext("2d");
+  ctx.font = "14px sans-serif";
   var idx=0;
   for(var i=0;i<10;i++){
     for(var j=0;j<10;j++){
       ctx.fillStyle = colours[points[flattened[idx]]];
       ctx.fillRect(j*30, i*30, j*30 + 30, i*30+30);
+      if(showtext){
+        ctx.fillStyle = '#dedede';
+        ctx.fillText(points[flattened[idx]], j*30+10, i*30+20);
+      }
       idx++;
     }
   }
