@@ -18,7 +18,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   color: #181818;
-  font-family: "open sans", sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-weight: 600;
 }
 
@@ -27,7 +27,7 @@ h1.title {
 }
 
 h1 {
-  font-size: 32px;
+  font-size: 28px;
   line-height: 40px;
 }
 
@@ -99,7 +99,7 @@ ul.posts span {
 .site .footer {
   font-size: 80%;
   color: #666;
-  border-top: 4px solid #eee;
+  border-top: 1px solid #eee;
   overflow: hidden;
 }
 
@@ -145,7 +145,7 @@ nav h1, nav h2 {
 
 .sidebar {
   padding-top: 25px;
-  font-family: "open sans", sans-serif;
+  font-family: "Inconsolata", sans-serif;
 }
 
 .sidebar p {
@@ -157,7 +157,7 @@ nav h1, nav h2 {
 }
 
 .content {
-  font: 400 16px/22px "open sans", sans-serif;
+  font: 400 16px/20px "Open Sans", HelveticaNeue, Helvetica, Arial, sans-serif;
   border-left: 1px solid #DDD;
   padding-left: 40px;
   padding-top: 25px;
@@ -171,7 +171,6 @@ nav h1, nav h2 {
 .footer {
   font-size: 80%;
   color: #666;
-  border-top: 4px solid #EEE;
   overflow: hidden;
 }
 
@@ -197,19 +196,19 @@ nav h1, nav h2 {
 
 #stalker {
   display: inline-block;
-  height: 18px;
-  margin-left: 5px;
+  height: 14px;
+  margin-left: 0px;
 }
 
 #stalker a {
-  width: 29px;
+  width: 22px;
   overflow: hidden;
   float: left;
 }
 
 #stalker i {
-  font-size: 28px;
-  margin-right: 5px;
+  font-size: 20px;
+  margin-right: 0px;
 }
 
 #stalker a:hover {
@@ -218,7 +217,7 @@ nav h1, nav h2 {
 }
 
 i.fa-hn {
-  font-family: "open sans", sans-serif;
+  font-family: "Inconsolata", sans-serif;
   text-align: center;
   font-size: 18px !important;
   position: relative;

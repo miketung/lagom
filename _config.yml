@@ -1,34 +1,6 @@
 # General Jekyll Config
 url: http://miketung.github.io
+baseurl: 
 highlighter: rouge
 lsi: false
 exclude: [LICENSE, CNAME, README.md, .gitignore]
-
-# Theme customization - please change from the defaults!
-theme:
-  # Color for top bar, links, etc
-  highlight_color: '#3498db'
-
-  # Profile links on the left sidebar, leave blank to ignore
-  social:
-    github: miketung
-    #bitbucket: philipj
-    hacker_news: miket
-    #stackexchange: 348619
-    #stackoverflow: 348619
-    twitter: mikektung
-    #facebook: zuck
-    #tumblr: animalygifs
-    linkedin: miketung
-    #gplus: 110552447039675960964
-
-  # "Hi, I'm _______"
-  name: Mike Tung
-  email: mike@cs.stanford.edu
-  tagline: "To achieve great things two things are needed; a plan, and not quite enough time."
-
-  # Google Analytics key, leave blank to ignore
-  google_analytics_key: UA-xxxx-x
-
-  # Toggle "Postings are my own" disclaimer in footer
-  show_disclaimer: true
