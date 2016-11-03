@@ -15,22 +15,26 @@ categories:
 <div id="Inner">
   <style>
     #Controls {font-size: 14px; }
-    .slider {float: left; width: 300px; }
+    .slider {float: left; width:300px; }
     .end-num {float:left; margin-left: 12px; width: 32px;  }
     .slider-row {padding: 5px 0px; }
     #Graphs div {float:left; }
   </style>
   <div id="Controls">
+    <div>
     <div class="slider-row" >
       <div id="Slider1" class="slider"></div><div class="end-num" id="k">100</div>
-      <div style="clear:both" />
+      <div style="clear:both" ></div>
     </div>
     <div>Number of clusters</div>
+    </div>
+    <div>
     <div class="slider-row" >
       <div id="Slider2" class="slider"></div><div class="end-num" id="p">1</div>
-      <div style="clear:both" />
+      <div style="clear:both" ></div>
     </div>
     <div>Noise level</div>
+    </div>
   </div><!-- Controls -->
   <div id="Graphs">
     <div>
@@ -344,13 +348,14 @@ var drawClusters2 = function(clusters, canvas, showtext){
       var nextDiff = idx==clusterIndexFlat.length-1 || clusterIndexFlat[idx] != clusterIndexFlat[idx+1];
       var topDiff = topRow || clusterIndexFlat[idx] != clusterIndexFlat[idx-10];
       var bottomDiff = bottomRow  || clusterIndexFlat[idx] != clusterIndexFlat[idx+10];
+      ctx.fillStyle = '#333';
       if (topRow || topDiff)
         ctx.fillRect(j*30, i*30, 30, 1); //top
       if (bottomRow || bottomDiff) 
         ctx.fillRect(j*30, i*30+29, 30, 1); //bottom
-      if(prevDiff && !begOfRow)
+      if(prevDiff || begOfRow )
         ctx.fillRect(j*30, i*30, 1, 30); //left
-      if(nextDiff && !endOfRow)
+      if(nextDiff || endOfRow )
         ctx.fillRect(j*30 + 29, i*30, 1, 30); //right
       idx++;
     }
