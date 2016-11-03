@@ -62,6 +62,11 @@ categories:
     <br />
     <div>Average linkage</div>
     </div>
+    <div>
+    <canvas id="Graph5" width="300" height="300" ></canvas>
+    <br />
+    <div>Median linkage</div>
+    </div>
   </div>
 <script type="text/javascript" src="{{ "/assets/js/jquery-1.4.2.min.js" | relative_url }}"></script>
 <script type="text/javascript" src="{{ "/assets/js/jquery-ui-1.8.custom.min.js" | relative_url }}"></script>
@@ -84,7 +89,7 @@ jQuery(document).ready(function($){
   $('#Slider1').slider('value', 25);
   $('#Slider2').slider('value', 0);
   
-  $('#Graph1,#Graph2,#Graph21,#Graph3,#Graph4').mouseover(function(){ drawClusters2(JSON.parse($(this).attr('data')), this, true);}).mouseout(function(){ drawClusters2(JSON.parse($(this).attr('data')), this, false);});
+  $('#Graph1,#Graph2,#Graph21,#Graph3,#Graph4,#Graph5').mouseover(function(){ drawClusters2(JSON.parse($(this).attr('data')), this, true);}).mouseout(function(){ drawClusters2(JSON.parse($(this).attr('data')), this, false);});
 
 	doCluster();
 });
@@ -131,8 +136,15 @@ var doCluster = function(){
     for(var j=0;j<N;j++){
       var x = Math.floor(distM[sorted[i]][sorted[j]] * 255);
       ctx.fillStyle = 'rgb('+x+','+x+','+x+')';
-      ctx.fillRect(i*3,j*3, i*3+3, j*3+3);
+      ctx.fillRect(i*3,j*3, 3, 3);
     }
+  }
+  for(var i=0;i<N;i++){
+    ctx.fillStyle=colours[points[sorted[i]]];
+    ctx.fillRect(i*3, 0, 3, 2);
+    ctx.fillRect(0, i*3, 2, 3);
+    ctx.fillRect(i*3, 300-2, 3, 2);
+    ctx.fillRect(300-2, i*3, 2, 3);
   }
 
   // compute greedy-linkage with 0.5 threshold
@@ -263,6 +275,41 @@ var doCluster = function(){
     } else break;
   }while(true);
   drawClusters(points, clusters, "Graph4");
+
+  // median-linkage
+  var clusters = initClusters(points);
+  var changed = false;
+  do {
+    //console.log(JSON.stringify(clusters));
+    changed = false;
+    var minDist = 1;
+    var pair = null;
+    for(var i=0;i<clusters.length;i++){
+      for(var j=i+1;j<clusters.length;j++){
+        var c1 = clusters[i], c2 = clusters[j];
+        compareCluster:
+        var dists = []
+        for(var u=0;u<c1.length;u++){
+          for(var v=0;v<c2.length;v++){
+            dists.push(distM[c1[u]][c2[v]]);
+          }
+        }
+        dists = dists.sort();
+        var median = dists[Math.floor(dists.length/2)];
+        if (median < minDist){
+          minDist = median;
+          pair = [i,j];
+        }
+      }
+    }
+    if(minDist < 0.5){
+      var i = pair[0], j = pair[1]; 
+      clusters[i] = clusters[i].concat(clusters[j])
+      clusters.splice(j, 1);
+    } else break;
+  }while(true);
+  drawClusters(points, clusters, "Graph5");
+  // show cluster quality scores for each Graphs
 }
 
 // adds noise to a 2D matrix
@@ -270,7 +317,10 @@ var noise = function(D, p){
   for(var i=0;i<N;i++){
     for(var j=0;j<N;j++){
       var x = D[i][j];
-      D[i][j] = nextGaussian(x, p); 
+      x = nextGaussian(x, p); 
+      if(x>1) x=1;
+      if(x<0) x=0;
+      D[i][j] = x;
     }
   }
   return D;
