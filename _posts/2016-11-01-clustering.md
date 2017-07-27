@@ -67,6 +67,11 @@ categories:
     <br />
     <div>Median linkage</div>
     </div>
+    <div>
+    <canvas id="Graph6" width="300" height="300" ></canvas>
+    <br />
+    <div><a href="https://en.wikipedia.org/wiki/Chinese_Whispers_(clustering_method)">Chinese Whispers</a></div>
+    </div>
   </div>
 <script type="text/javascript" src="{{ "/assets/js/jquery-1.4.2.min.js" | relative_url }}"></script>
 <script type="text/javascript" src="{{ "/assets/js/jquery-ui-1.8.custom.min.js" | relative_url }}"></script>
@@ -89,7 +94,7 @@ jQuery(document).ready(function($){
   $('#Slider1').slider('value', 25);
   $('#Slider2').slider('value', 0);
   
-  $('#Graph1,#Graph2,#Graph21,#Graph3,#Graph4,#Graph5').mouseover(function(){ drawClusters2(JSON.parse($(this).attr('data')), this, true);}).mouseout(function(){ drawClusters2(JSON.parse($(this).attr('data')), this, false);});
+  $('#Graph1,#Graph2,#Graph21,#Graph3,#Graph4,#Graph5,#Graph6').mouseover(function(){ drawClusters2(JSON.parse($(this).attr('data')), this, true);}).mouseout(function(){ drawClusters2(JSON.parse($(this).attr('data')), this, false);});
 
 	doCluster();
 });
@@ -310,7 +315,43 @@ var doCluster = function(){
   }while(true);
   drawClusters(points, clusters, "Graph5");
   // show cluster quality scores for each Graphs
+
+  // Chinese Whispers
+  var clusterIdx = [];
+  for(var i=0;i<points.length;i++){
+    clusterIdx[i] = i; // each point in own cluster 
+  }
+  var changed = false;
+  do {
+    //console.log(JSON.stringify(clusterIdx));
+    changed = false;
+    for(var i=0;i<points.length;i++){             // for each point
+      var neighborClusters = []
+      for(var j=i+1;j<points.length;j++){       // look at other points
+        if(distM[i][j] < 0.5) neighborClusters.push(clusterIdx[j]);
+      }
+      if (neighborClusters.length!=0){
+        var oldCluster = clusterIdx[i]
+        clusterIdx[i] = mode(neighborClusters);
+        if (clusterIdx[i]!=oldCluster)
+          changed = true;
+      }
+    }
+    if (!changed) break; 
+  }while(true);
+  var id2Cluster = {};
+  for(var i=0;i<clusterIdx.length;i++){
+    var clId = clusterIdx[i];
+    if (id2Cluster[clId]==null) id2Cluster[clId]=[i];
+    else id2Cluster[clId].push(i);
+  }
+  var clusters = [];
+  for(key in id2Cluster){
+    clusters.push(id2Cluster[key]);
+  }
+  drawClusters(points, clusters, "Graph6");
 }
+
 
 // adds noise to a 2D matrix
 var noise = function(D, p){ 
@@ -324,6 +365,22 @@ var noise = function(D, p){
     }
   }
   return D;
+}
+
+var mode = function(arr){ // return the most common value in arr
+  if (arr.length == 0) return null;
+  var modeMap = {};
+  var maxEl = arr[0], maxCount = 1;
+  for(var i=0;i<arr.length;i++){
+    var el = arr[i];
+    if (modeMap[el]==null) modeMap[el]=1;
+    else modeMap[el]++;
+    if (modeMap[el] > maxCount){
+      maxEl = el;
+      maxCount = modeMap[el];
+    }
+  }  
+  return maxEl;
 }
 
 var nextGaussian = function(mean,v){
