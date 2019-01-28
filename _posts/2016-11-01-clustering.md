@@ -1,15 +1,10 @@
 ---
-layout: default 
+layout: post 
 title: Hierarchical Clustering
 categories:
 - blog
 ---
-<p class="meta">
-  <a href="/">
-    <i class="home fa fa-home"></i>
-  </a>
-</p>
-<h1 class="title">{{ page.title }}</h1>
+
 <link rel="stylesheet" type="text/css" href="{{ "/assets/css/jquery-ui-1.8.custom.css" | relative_url }}" />
 
 <div id="Inner">
